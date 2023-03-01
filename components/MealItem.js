@@ -7,21 +7,43 @@ import {
   Platform,
 } from "react-native"
 
-function MealItem({ title, imageUrl, duration, complexity, affordability }) {
+import { useNavigation } from "@react-navigation/native"
+import MealDetails from "./MealDetails"
+
+function MealItem({
+  id,
+  title,
+  imageUrl,
+  duration,
+  complexity,
+  affordability,
+}) {
+  const navigation = useNavigation()
+
+  function selectMealItemHandler() {
+    navigation.navigate("MealDetails", {
+      mealId: id,
+    })
+  }
+
   return (
     <View style={styles.mealItem}>
-      <Pressable>
+      <Pressable
+        android_ripple={{ color: "#ccc" }}
+        style={({ pressed }) => (pressed ? styles.buttonPressed : null)}
+        onPress={selectMealItemHandler}
+      >
         <View style={styles.innerContainer}>
           <View>
             <Image style={styles.image} source={{ uri: imageUrl }} />
 
             <Text style={styles.title}>{title}</Text>
           </View>
-          <View style={styles.details}>
-            <Text style={styles.detailItem}>{duration} minutes</Text>
-            <Text style={styles.detailItem}>{complexity.toUpperCase()}</Text>
-            <Text style={styles.detailItem}>{affordability.toUpperCase()}</Text>
-          </View>
+          <MealDetails
+            duration={duration}
+            affordability={affordability}
+            complexity={complexity}
+          />
         </View>
       </Pressable>
     </View>
@@ -33,7 +55,7 @@ export default MealItem
 const styles = StyleSheet.create({
   mealItem: {
     borderRadius: 8,
-    backgroundColor: "white",
+    backgroundColor: "#9b97d3",
     margin: 16,
     overflow: "hidden",
     elevation: 4,
@@ -60,18 +82,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
     margin: 8,
-  },
-  details: {
-    textAlign: "center",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 8,
-    flexDirection: "row",
-  },
-  detailItem: {
-    flex: 1,
-    textAlign: "center",
-    marginHorizontal: 4,
-    fontSize: 12,
   },
 })
